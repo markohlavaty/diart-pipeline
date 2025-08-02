@@ -35,9 +35,11 @@ class PortReader:
         and wait for a single incoming connection.
         """
         self._server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self._server.setblocking(True)
         self._server.bind(('localhost', self._port))
         self._server.listen()
         self._conn, _ = self._server.accept()
+        self._conn.setblocking(True)
 
     def close(self) -> None:
         """
