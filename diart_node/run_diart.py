@@ -45,13 +45,13 @@ if __name__ == '__main__':
     )
 
     parser.add_argument(
-        '--sample_rate',
+        '--sample-rate',
         type=int,
         required=True,
         help='Sample rate of the audio stream (e.g., 16000)'
     )
     parser.add_argument(
-        '--chunk_duration',
+        '--chunk-duration',
         type=float,
         required=True,
         help='Duration of each buffered audio chunk in seconds (e.g., 0.1)'

@@ -30,28 +30,28 @@ if __name__ == '__main__':
     )
 
     parser.add_argument(
-        '--transcription_port',
+        '--transcription-port',
         type=int,
         required=True,
         help='Port for receiving transcription data.'
     )
 
     parser.add_argument(
-        '--diarization_port',
+        '--diarization-port',
         type=int,
         required=True,
         help='Port for receiving diarization data.'
     )
 
     parser.add_argument(
-        '--diarization_buffer_size',
+        '--diarization-buffer-size',
         type=int,
         required=True,
         help='Buffer size for diarization stream (number of utterances).'
     )
 
     parser.add_argument(
-        '--maximum_diarization_delay',
+        '--maximum-diarization-delay',
         type=float,
         required=True,
         help='Maximum delay (in seconds) to wait for diarization results.'

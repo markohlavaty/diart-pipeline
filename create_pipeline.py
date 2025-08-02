@@ -18,9 +18,6 @@ def main():
     REPORTER_PORT = 8008
 
 
-    
-
-
     p = Pipeliner()
     recorder_node = p.addLocalNode('recorder', {}, {'audio': 'stdout'}, f'nc -lk {RECORDER_PORT}')
     whisper_node = p.addLocalNode('whisper', {'audio': f'{SIMULSTREAMING_INPUT_PORT}'}, {'timestamped_transcription': 'stdout'}, f'python3 {SIMULSTREAMING_MAIN_PATH} --host localhost --port {SIMULSTREAMING_INPUT_PORT} --min-chunk-size 1.0 --task transcribe --vac --vac-chunk-size 0.5')
