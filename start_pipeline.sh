@@ -33,6 +33,7 @@ python3 ./simulstreaming_node/simulstreaming_whisper_server.py \
   --host localhost --port 8001 \
   --min-chunk-size 1.0 --task transcribe \
   --vac --vac-chunk-size 0.5 --log-level CRITICAL \
+  --language auto \
 | nc localhost 8003 &
 whisper_pipe_pid=$!
 
