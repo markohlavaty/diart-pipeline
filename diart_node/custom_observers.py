@@ -5,6 +5,24 @@ from diart.sinks import _extract_prediction
 from rx.core import Observer
 
 
+class AutoFlushStdout:
+    """
+    A custom class that allows diart to write to standard output in real time. 
+
+    It acts as a file in order to be compatible with the needed interface,
+    but writes to standard output and flushes when written to.
+    """
+
+    @staticmethod
+    def write(data):
+        sys.stdout.write(data)
+        sys.stdout.flush()
+
+    @staticmethod
+    def flush():
+        sys.stdout.flush()
+
+
 class StdoutWriter(Observer):
     """
     A custom observer that takes in predictions from Diart
@@ -26,7 +44,8 @@ class StdoutWriter(Observer):
             uri (Text): The URI string to identify the audio stream being processed.
         """
         super().__init__()
-        self.uri = uri
+        self._uri = uri
+        self._file = AutoFlushStdout()
 
     def on_next(self, value: Union[Tuple, Annotation]) -> None:
         """
@@ -39,5 +58,5 @@ class StdoutWriter(Observer):
         """
         prediction = _extract_prediction(value)
         # Write prediction in RTTM format
-        prediction.uri = self.uri
-        prediction.write_rttm(sys.stdout)
+        prediction.uri = self._uri
+        prediction.write_rttm(self._file)
