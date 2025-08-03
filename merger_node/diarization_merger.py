@@ -49,7 +49,7 @@ class DiarizationMerger:
         """
         parts = word_line.strip().split(' ', maxsplit=2)
         word = parts[2]
-        word_start = float(parts[0]) / 1000
+        word_start = float(parts[0]) / 1000  # divide by 1000 to convert to seconds
         word_end = float(parts[1]) / 1000
 
         if word_end < word_start:
@@ -72,7 +72,7 @@ class DiarizationMerger:
         """
         parts = rttm_line.strip().split()
         if len(parts) != 10 or parts[0] != 'SPEAKER':
-            raise ValueError('Invalid RTTM line format.')
+            return None
 
         speaker = parts[7]
         speaker_start = float(parts[3])
@@ -117,9 +117,10 @@ class DiarizationMerger:
         The size of the buffer is limited to a fixed number of diarization lines. 
         """
         while self._diarization_reader.has_data():
-            self._diarization_buffer.append(
-                self._diarization_reader.read_line()
-            )
+            speaker_line = self._diarization_reader.read_line()
+            speaker_turn = self._get_speaker_information(speaker_line)
+            if speaker_turn is not None:
+                self._diarization_buffer.append(speaker_turn)
 
     def _find_speaker(self, word_start: float, word_end: float) -> str:
         """
@@ -136,8 +137,7 @@ class DiarizationMerger:
         closest_speaker = 'unknown_speaker'
         closest_speaker_distance = float('inf')
 
-        for speaker_line in self._diarization_buffer:
-            speaker, speaker_start, speaker_end = self._get_speaker_information(speaker_line)
+        for speaker, speaker_start, speaker_end in self._diarization_buffer:
 
             if speaker_end < word_start:
                 speaker_distance = word_start - speaker_end
