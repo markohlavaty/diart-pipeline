@@ -101,7 +101,6 @@ class ServerProcessor:
                 beg = max(beg, self.last_end)
 
             self.last_end = end
-            print("%1.0f %1.0f %s" % (beg,end,o[2]),flush=True,file=sys.stderr)
             return "%1.0f %1.0f %s" % (beg,end,o[2])
         else:
             logger.debug("No text in this segment")
@@ -110,7 +109,7 @@ class ServerProcessor:
     def send_result(self, o):
         msg = self.format_output_transcript(o)
         if msg is not None:
-            self.connection.send(msg)
+            print(msg, flush=True)
 
     def process(self):
         # handle one client connection
