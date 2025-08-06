@@ -52,8 +52,9 @@ class DiarizationMerger:
         word_start = float(parts[0]) / 1000  # divide by 1000 to convert to seconds
         word_end = float(parts[1]) / 1000
 
-        if word_end < word_start:
-            raise ValueError('The start of a word must come before its end.')
+        # ensure word_start <= word_end
+        # could also be done by word_end = max(word_start, word_end)
+        word_start = min(word_start, word_end)
         return word, word_start, word_end
 
     @staticmethod
@@ -79,9 +80,9 @@ class DiarizationMerger:
         duration = float(parts[4])
         speaker_end = speaker_start + duration
 
-        if speaker_end < speaker_start:
-            raise ValueError('The start of a speaker turn must come before its end.')
-
+        # ensure speaker_start <= speaker_end
+        # could also be done by speaker_end = max(speaker_start, speaker_end)
+        speaker_start = min(speaker_start, speaker_end)
         return speaker, speaker_start, speaker_end
 
     def _output_diarization(self, speaker: str, word: str) -> None:
@@ -149,6 +150,7 @@ class DiarizationMerger:
                 if speaker_distance < closest_speaker_distance:
                     closest_speaker = speaker
                     closest_speaker_distance = speaker_distance
+            # handle cases with speaker overlap (overlaps of length 0 also count)
             else:
                 overlap_start = max(word_start, speaker_start)
                 overlap_end = min(word_end, speaker_end)
